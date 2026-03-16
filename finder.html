@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appletunities Finder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="finder-page">
+    <header class="site-header">
+      <nav class="navbar">
+        <a class="brand" href="index.html">Big Appletunities</a>
+        <div class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="index.html#about">About Us</a>
+          <a class="nav-cta active-link" href="finder.html">Finder Page</a>
+        </div>
+      </nav>
+    </header>
+
+    <main class="finder-layout">
+      <section class="finder-hero">
+        <p class="eyebrow">Appletunities Finder</p>
+        <h1>Browse the dataset and filter it by CSV categories.</h1>
+        <p class="lead">
+          This page reads <code>data/appletunities.csv</code>, builds category filters from the
+          file, and lets visitors search across the loaded rows.
+        </p>
+      </section>
+
+      <section class="finder-controls">
+        <label class="search-field">
+          <span>Search</span>
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Search by title, borough, audience, or description"
+          />
+        </label>
+        <div class="filter-group">
+          <p>Categories</p>
+          <div id="categoryFilters" class="chip-row"></div>
+        </div>
+      </section>
+
+      <section class="finder-results">
+        <div class="results-header">
+          <h2>Available Appletunities</h2>
+          <p id="resultsCount">Loading dataset...</p>
+        </div>
+        <div id="resultsGrid" class="results-grid"></div>
+      </section>
+    </main>
+
+    <script src="finder.js"></script>
+  </body>
+</html>
