@@ -3,11 +3,13 @@
   --panel: rgba(255, 246, 237, 0.44);
   --panel-strong: rgba(255, 249, 242, 0.78);
   --text: #fff7ef;
+  --white: #ffffff;
   --text-dark: #6e2d23;
-  --muted: rgba(255, 242, 233, 0.86);
+  --muted: rgba(250, 246, 243, 0.86);
   --muted-dark: rgba(110, 45, 35, 0.76);
+  --muted-dark2: rgba(85, 42, 35, 0.76);
   --accent: #f37a52;
-  --accent-deep: #ffdcc8;
+  --accent-deep: #f7e5db;
   --accent-soft: rgba(255, 231, 210, 0.18);
   --line: rgba(255, 243, 233, 0.22);
   --shadow: 0 28px 90px rgba(151, 54, 31, 0.2);
@@ -23,10 +25,10 @@ html {
 
 body {
   margin: 0;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "Space Grotesk";
   background:
-    radial-gradient(circle at 62% 26%, rgba(255, 76, 67, 0.72), transparent 28%),
-    radial-gradient(circle at 45% 52%, rgba(255, 124, 71, 0.88), transparent 34%),
+    radial-gradient(circle at 45% 26%, rgba(255, 127, 120, 0.72), transparent 28%),
+    radial-gradient(circle at 45% 52%, rgba(253, 154, 115, 0.88), transparent 34%),
     radial-gradient(circle at 35% 88%, rgba(255, 203, 115, 0.72), transparent 18%),
     linear-gradient(180deg, #f8f2e7 0%, #f7eada 100%);
   color: var(--text);
@@ -70,7 +72,8 @@ body::before {
 
 .brand,
 .nav-links a {
-  color: #fff7ed;
+  font-family: "Space Grotesk";
+  color: var(--white);
   text-decoration: none;
 }
 
@@ -78,7 +81,7 @@ body::before {
   display: inline-flex;
   align-items: center;
   gap: 0.8rem;
-  font-family: "Instrument Serif", serif;
+  font-family: "Space Grotesk";
   font-size: 1.55rem;
   letter-spacing: 0.02em;
 }
@@ -137,10 +140,11 @@ main {
 .finder-hero h1,
 .section-heading h2 {
   margin: 0;
-  font-family: "Instrument Serif", serif;
+  font-family: "Space Grotesk", serif;
   font-weight: 400;
   line-height: 0.96;
   letter-spacing: -0.02em;
+  color: var(--text-dark);
 }
 
 .hero h1,
@@ -156,11 +160,11 @@ main {
 
 .eyebrow {
   margin-bottom: 0.6rem;
-  font-size: 0.9rem;
+  font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--accent-deep);
+  color: var(--accent);
 }
 
 .lead,
@@ -168,9 +172,12 @@ main {
 .finder-preview-card p,
 .contact-copy,
 .results-card p {
-  color: var(--muted);
+  color: var(--muted-dark);
   font-size: 1.05rem;
   line-height: 1.7;
+}
+.info-card h3 {
+  color: var(--muted-dark2);
 }
 
 .hero-actions {
@@ -189,18 +196,25 @@ main {
   border-radius: 999px;
   text-decoration: none;
   font-weight: 700;
+  color: var(--white);
 }
 
 .button-primary {
   background: rgba(255, 247, 237, 0.14);
   color: #fff7ed;
-  border: 1px solid rgba(255, 247, 237, 0.38);
+  border: 3px solid rgba(254, 252, 248, 0.38);
 }
 
 .button-secondary {
-  border: 1px solid var(--line);
+  border: 3px solid var(--line);
   color: #fff7ed;
   background: rgba(255, 247, 237, 0.08);
+}
+
+.button-dark {
+  background: rgba(228, 216, 202, 0.264);
+  color: var(--text-dark);
+  border: 3px solid var(--accent);
 }
 
 .hero-card,
