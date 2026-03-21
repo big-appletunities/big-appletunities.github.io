@@ -10,7 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Instrument+Serif:ital@0;1&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=2" />
   </head>
   <body class="finder-page">
     <header class="site-header">
@@ -33,6 +33,7 @@
         <h1>Browse our curated dataset of appletunities.</h1>
         <p class="lead">
           This page features all the appletunities from our instagram page, all in one spot.
+          Interested in one of the appletunities? Just click on the title for more details and the link.
         </p>
       </section>
 
@@ -42,12 +43,20 @@
           <input
             id="searchInput"
             type="search"
-            placeholder="Search by title, borough, audience, or description"
+            placeholder="Search by title, location, audience, or description"
           />
         </label>
         <div class="filter-group">
           <p>Categories</p>
           <div id="categoryFilters" class="chip-row"></div>
+        </div>
+        <div class="filter-group">
+          <p>Subjects</p>
+          <div id="subjectFilters" class="chip-row"></div>
+        </div>
+        <div class="filter-group">
+          <p>Cost</p>
+          <div id="costFilters" class="chip-row"></div>
         </div>
       </section>
 
@@ -60,6 +69,6 @@
       </section>
     </main>
 
-    <script src="finder.js"></script>
+    <script src="finder.js?v=1"></script>
   </body>
 </html>
