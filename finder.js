@@ -137,8 +137,8 @@ function showDescriptionModal(title, fullDescription, link, instaLink) {
       <div class="modal-body" style="padding: 20px; max-height: 60vh; overflow-y: auto; color: #6e2d23; line-height: 1.6;">
         <p>${fullDescription}</p>
         <div style="display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 15px;">
-          ${link ? `<a class="modal-link" href="${link}" target="_blank" rel="noreferrer" style="display: inline-block; padding: 8px 16px; background: #f37a52; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">Website link</a>` : ''}
-          ${instaLink ? `<a class="modal-link" href="${instaLink}" target="_blank" rel="noreferrer" style="display: inline-block; padding: 8px 16px; background: #f37a52; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">Instagram</a>` : ''}
+          ${link && link !== "N/A" ? `<a class="modal-link" href="${link}" target="_blank" rel="noreferrer" style="display: inline-block; padding: 8px 16px; background: #f37a52; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">Website link</a>` : ''}
+          ${instaLink && instaLink !== "N/A" ? `<a class="modal-link" href="${instaLink}" target="_blank" rel="noreferrer" style="display: inline-block; padding: 8px 16px; background: #f37a52; color: white; text-decoration: none; border-radius: 6px; font-weight: 500;">Instagram Link</a>` : ''}
         </div>
       </div>
     </div>
