@@ -3,6 +3,7 @@ const searchInput = document.getElementById("searchInput");
 const categoryFilters = document.getElementById("categoryFilters");
 const subjectFilters = document.getElementById("subjectFilters");
 const costFilters = document.getElementById("costFilters");
+const audienceFilters = document.getElementById("audienceFilters");
 const resultsGrid = document.getElementById("resultsGrid");
 const resultsCount = document.getElementById("resultsCount");
 
@@ -10,6 +11,7 @@ let rows = [];
 let activeCategory = "All";
 let activeSubject = "All";
 let activeCost = "All";
+let activeAudience = "All";
 let searchTerm = "";
 
 function parseDeadline(deadlineStr) {
@@ -34,6 +36,9 @@ async function loadAppletunities() {
     const csvText = await response.text();
     rows = parseCSV(csvText);
     
+    // Filter out entries with N/A in Cost or Subject
+    rows = rows.filter(entry => entry.Cost !== "N/A" && entry.Subject !== "N/A");
+    
     // Sort rows by deadline (earliest first)
     rows.sort((a, b) => {
       const dateA = parseDeadline(a.Deadline);
@@ -44,6 +49,7 @@ async function loadAppletunities() {
     renderCategoryFilters(rows);
     renderSubjectFilters(rows);
     renderCostFilters(rows);
+    renderAudienceFilters(rows);
     renderResults();
   } catch (error) {
     resultsCount.textContent = "Dataset could not be loaded.";
@@ -163,7 +169,7 @@ function showDescriptionModal(title, fullDescription, link, instaLink) {
 }
 
 function renderCategoryFilters(entries) {
-  const categories = ["All", ...new Set(entries.map((entry) => entry.Category).filter(Boolean))];
+  const categories = ["All", ...new Set(entries.map((entry) => entry.Category).filter(val => val && val !== "N/A"))];
 
   categoryFilters.innerHTML = categories
     .map(
@@ -185,7 +191,7 @@ function renderCategoryFilters(entries) {
 }
 
 function renderSubjectFilters(entries) {
-  const subjects = ["All", ...new Set(entries.map((entry) => entry.Subject).filter(Boolean))];
+  const subjects = ["All", ...new Set(entries.map((entry) => entry.Subject).filter(val => val && val !== "N/A"))];
 
   subjectFilters.innerHTML = subjects
     .map(
@@ -207,7 +213,7 @@ function renderSubjectFilters(entries) {
 }
 
 function renderCostFilters(entries) {
-  const costs = ["All", ...new Set(entries.map((entry) => entry.Cost).filter(Boolean))];
+  const costs = ["All", ...new Set(entries.map((entry) => entry.Cost).filter(val => val && val !== "N/A"))];
 
   costFilters.innerHTML = costs
     .map(
@@ -228,16 +234,39 @@ function renderCostFilters(entries) {
   });
 }
 
+function renderAudienceFilters(entries) {
+  const audiences = ["All", ...new Set(entries.map((entry) => entry.Audience).filter(val => val && val !== "N/A"))];
+
+  audienceFilters.innerHTML = audiences
+    .map(
+      (audience) => `
+        <button class="chip ${audience === activeAudience ? "active" : ""}" data-audience="${audience}">
+          ${audience}
+        </button>
+      `
+    )
+    .join("");
+
+  audienceFilters.querySelectorAll(".chip").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeAudience = button.dataset.audience;
+      renderAudienceFilters(rows);
+      renderResults();
+    });
+  });
+}
+
 function renderResults() {
   const filteredRows = rows.filter((entry) => {
     const matchesCategory = activeCategory === "All" || entry.Category === activeCategory;
     const matchesSubject = activeSubject === "All" || entry.Subject === activeSubject;
     const matchesCost = activeCost === "All" || entry.Cost === activeCost;
+    const matchesAudience = activeAudience === "All" || entry.Audience === activeAudience;
     const haystack = [entry.Name, entry.Subject, entry.Location, entry.Audience, entry.Description, entry.Category]
       .join(" ")
       .toLowerCase();
     const matchesSearch = haystack.includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSubject && matchesCost && matchesSearch;
+    return matchesCategory && matchesSubject && matchesCost && matchesAudience && matchesSearch;
   });
 
   resultsCount.textContent = `${filteredRows.length} appletunities shown`;
