@@ -334,15 +334,18 @@ a {
   margin: 1rem 0;
 }
 
-.contact-emily {
-  text-align: center;
-  margin: 1.5rem 0;
-}
 
 .contact-emily h3 {
   margin: 0.5rem 0;
   color: var(--text-dark);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
+}
+
+.contact-emily h4 {
+  color: var(--text-dark);
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0.25rem 0 0;
 }
 
 .contact-emily p {
@@ -351,6 +354,59 @@ a {
   color: var(--muted-dark);
   max-width: 400px;
   margin: 0 auto;
+}
+
+/* Make Olivia match Emily's name/title/description styles */
+.contact-olivia h3 {
+  margin: 0.5rem 0;
+  color: var(--text-dark);
+  font-size: 1.1rem;
+}
+.contact-olivia h4 {
+  color: var(--text-dark);
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0.25rem 0 0;
+}
+.contact-olivia p {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--muted-dark);
+  max-width: 400px;
+  margin: 0.5rem auto 0;
+}
+
+/* Leadership row: Emily + Olivia inline like editors */
+.leadership-members {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin: 1.5rem 0;
+}
+
+.leadership-members > div {
+  flex: 1;
+  min-width: 250;
+  text-align: center;
+}
+
+/* Keep leadership side-by-side on small screens; allow horizontal scroll if needed */
+@media (max-width: 720px) {
+  .leadership-members {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem;
+  }
+
+  .leadership-members > div {
+    flex: 0 0 50%;
+  }
+
+  .leadership-members img {
+    width: 160px !important;
+    height: 160px !important;
+  }
 }
 
 .editor-members {
