@@ -3,7 +3,8 @@ const searchInput = document.getElementById("searchInput");
 const categoryFilters = document.getElementById("categoryFilters");
 const subjectFilters = document.getElementById("subjectFilters");
 const costFilters = document.getElementById("costFilters");
-const audienceFilters = document.getElementById("audienceFilters");
+const educationFilters = document.getElementById("educationFilters");
+const ageFilters = document.getElementById("ageFilters");
 const resultsGrid = document.getElementById("resultsGrid");
 const resultsCount = document.getElementById("resultsCount");
 
@@ -11,8 +12,20 @@ let rows = [];
 let activeCategory = "All";
 let activeSubject = "All";
 let activeCost = "All";
-let activeAudience = "All";
+let activeEducation = "All";
+let activeAge = "All";
 let searchTerm = "";
+
+const educationOptions = ["All", "Middle School", "High School", "College", "Graduate"];
+const ageOptions = [
+  { label: "All", min: null, max: null },
+  { label: "Under 13", min: 0, max: 12 },
+  { label: "13–14", min: 13, max: 14 },
+  { label: "15–16", min: 15, max: 16 },
+  { label: "17–18", min: 17, max: 18 },
+  { label: "19–21", min: 19, max: 21 },
+  { label: "22+", min: 22, max: null },
+];
 
 function parseDeadline(deadlineStr) {
   if (!deadlineStr) return new Date(9999, 11, 31); // Far future date for empty deadlines
@@ -49,7 +62,8 @@ async function loadAppletunities() {
     renderCategoryFilters(rows);
     renderSubjectFilters(rows);
     renderCostFilters(rows);
-    renderAudienceFilters(rows);
+    renderEducationFilters();
+    renderAgeFilters();
     renderResults();
   } catch (error) {
     resultsCount.textContent = "Dataset could not be loaded.";
@@ -234,26 +248,81 @@ function renderCostFilters(entries) {
   });
 }
 
-function renderAudienceFilters(entries) {
-  const audiences = ["All", ...new Set(entries.map((entry) => entry.Audience).filter(val => val && val !== "N/A"))];
-
-  audienceFilters.innerHTML = audiences
+function renderEducationFilters() {
+  educationFilters.innerHTML = educationOptions
     .map(
-      (audience) => `
-        <button class="chip ${audience === activeAudience ? "active" : ""}" data-audience="${audience}">
-          ${audience}
+      (education) => `
+        <button class="chip ${education === activeEducation ? "active" : ""}" data-education="${education}">
+          ${education}
         </button>
       `
     )
     .join("");
 
-  audienceFilters.querySelectorAll(".chip").forEach((button) => {
+  educationFilters.querySelectorAll(".chip").forEach((button) => {
     button.addEventListener("click", () => {
-      activeAudience = button.dataset.audience;
-      renderAudienceFilters(rows);
+      activeEducation = button.dataset.education;
+      renderEducationFilters();
       renderResults();
     });
   });
+}
+
+function renderAgeFilters() {
+  ageFilters.innerHTML = ageOptions
+    .map(
+      ({ label }) => `
+        <button class="chip ${label === activeAge ? "active" : ""}" data-age="${label}">
+          ${label}
+        </button>
+      `
+    )
+    .join("");
+
+  ageFilters.querySelectorAll(".chip").forEach((button) => {
+    button.addEventListener("click", () => {
+      activeAge = button.dataset.age;
+      renderAgeFilters();
+      renderResults();
+    });
+  });
+}
+
+function normalizeEducation(education) {
+  return education.toLowerCase().replace(/\s+/g, "");
+}
+
+function matchesEducation(entry) {
+  if (activeEducation === "All" || !entry.Education || entry.Education.trim().toLowerCase() === "any") {
+    return true;
+  }
+
+  const selectedEducation = normalizeEducation(activeEducation);
+  return entry.Education
+    .split(",")
+    .some((education) => {
+      const normalizedEducation = normalizeEducation(education.trim());
+      return normalizedEducation === selectedEducation ||
+        (selectedEducation === "highschool" && normalizedEducation.startsWith("highschool"));
+    });
+}
+
+function matchesAge(entry) {
+  if (activeAge === "All" || entry.AgeMin === "N/A" || entry.AgeMax === "N/A") {
+    return true;
+  }
+
+  const selectedRange = ageOptions.find(({ label }) => label === activeAge);
+  const minimumAge = Number(entry.AgeMin);
+  const maximumAge = Number(entry.AgeMax);
+
+  if (!selectedRange || Number.isNaN(minimumAge) || Number.isNaN(maximumAge)) {
+    return true;
+  }
+
+  const selectedMinimum = selectedRange.min ?? 0;
+  const selectedMaximum = selectedRange.max ?? Infinity;
+  return minimumAge <= selectedMaximum && maximumAge >= selectedMinimum;
 }
 
 function renderResults() {
@@ -261,12 +330,13 @@ function renderResults() {
     const matchesCategory = activeCategory === "All" || entry.Category === activeCategory;
     const matchesSubject = activeSubject === "All" || entry.Subject === activeSubject;
     const matchesCost = activeCost === "All" || entry.Cost === activeCost;
-    const matchesAudience = activeAudience === "All" || entry.Audience === activeAudience;
-    const haystack = [entry.Name, entry.Subject, entry.Location, entry.Audience, entry.Description, entry.Category]
+    const matchesEducationFilter = matchesEducation(entry);
+    const matchesAgeFilter = matchesAge(entry);
+    const haystack = [entry.Name, entry.Subject, entry.Location, entry.Education, entry.Description, entry.Category]
       .join(" ")
       .toLowerCase();
     const matchesSearch = haystack.includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSubject && matchesCost && matchesAudience && matchesSearch;
+    return matchesCategory && matchesSubject && matchesCost && matchesEducationFilter && matchesAgeFilter && matchesSearch;
   });
 
   resultsCount.textContent = `${filteredRows.length} appletunities shown`;
@@ -286,7 +356,7 @@ function renderResults() {
             <span>${entry.Subject}</span>
             ${entry.Cost !== "N/A" ? `<span>${entry.Cost}</span>` : ''}
             ${entry.Location !== "N/A" ? `<span>${entry.Location}</span>` : ''}
-            <span>${entry.Audience}</span>
+            ${entry.Education !== "N/A" ? `<span>${entry.Education}</span>` : ''}
           </div>
           <h3 class="clickable-title">${entry.Name}</h3>
           <p class="clickable-description">${truncateDescription(entry.Description)}</p>
